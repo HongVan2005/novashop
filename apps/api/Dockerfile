@@ -5,4 +5,4 @@ RUN npm install
 COPY . .
 RUN npx prisma generate
 EXPOSE 4000
-CMD ["node", "src/server.js"]
+CMD ["node", "apps/api/src/server.js"]
