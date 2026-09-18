@@ -1,0 +1,30 @@
+﻿services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: novashop-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: novashop
+      POSTGRES_PASSWORD: novashop
+      POSTGRES_DB: novashop
+    ports:
+      - "5433:5432"
+    volumes:
+      - novashop_pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: novashop-app
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://novashop:novashop@novashop-postgres:5432/novashop?schema=public
+    depends_on:
+      - postgres
+
+volumes:
+  novashop_pgdata:
